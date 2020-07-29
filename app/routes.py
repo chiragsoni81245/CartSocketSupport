@@ -13,7 +13,7 @@ def test_connect():
 	print("\n\nAdded {}\n\n".format(sid))
 	active_sessions.add(sid)
 	print(active_sessions)
-	emit('message', {'data': 'Connected'})
+	emit('message', {'data': 'Connected Yes'})
 
 
 
@@ -29,6 +29,11 @@ def test_disconnect():
 @socketio.on('updateData', namespace='/test')
 def test_disconnect(json):
 	print(json)
+	sid = request.sid
 	sessions = list(active_sessions)
 	for session in sessions:
-		emit("updateHandler",{"data": json }, room=session)
+		if sid!=session:
+			print("sended to {}".format(session))
+			emit("updateHandler",{"data": json }, room=session)
+		else:
+			print("{} Rejected".format(sid))
